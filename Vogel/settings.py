@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'django.contrib.gis',
     'species',
     'observation',
+    'places',
 ]
 
 MIDDLEWARE = [
