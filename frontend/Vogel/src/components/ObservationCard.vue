@@ -16,7 +16,7 @@ const toggleExpanded = () => {
 
 <template>
   <div>
-    <div class="bg-white shadow-lg rounded-lg p-4">
+    <div class="dark:bg-gray-700 shadow-lg rounded-lg p-4">
       <h2 class="text-xl font-bold">
         <a @click="toggleExpanded">{{ observation.species.name }}</a>
       </h2>
@@ -24,7 +24,7 @@ const toggleExpanded = () => {
       <MiniMap
         v-if="expanded"
         :id="observation.id"
-        :lattitude="observation.lattitude"
+        :latitude="observation.latitude"
         :longitude="observation.longitude"
       ></MiniMap>
     </div>
