@@ -23,5 +23,5 @@ onUpdated(() => {
 </script>
 
 <template>
-  <div class="h-96 w-full" id="map-main"></div>
+  <div class="h-96 w-full rounded" id="map-main"></div>
 </template>

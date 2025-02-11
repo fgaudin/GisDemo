@@ -4,13 +4,15 @@ import AutoComplete, { type AutoCompleteCompleteEvent } from 'primevue/autocompl
 import ColorPicker from 'primevue/colorpicker'
 import axios from 'axios'
 import type ISpecies from '@/types/Species'
-import { Button, DatePicker, InputNumber } from 'primevue'
-import L from 'leaflet'
+import { Button, DatePicker, InputNumber, Message } from 'primevue'
+
+import AddMap from './AddMap.vue'
 
 const show = ref(false)
 
 const showForm = () => {
   show.value = !show.value
+  console.log(show.value)
 }
 
 const species = ref<any>([])
@@ -33,36 +35,10 @@ onMounted(async () => {
   }
 })
 
-let map: L.Map
-let marker: L.Marker
-
-onUpdated(() => {
-  if (show.value === true) {
-    if (map === undefined) {
-      map = L.map('map-selector').setView([50.0782, 8.2398], 10)
-      const tiles = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        maxZoom: 19,
-        attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-      }).addTo(map)
-
-      function onMapClick(e: any) {
-        latitude.value = e.latlng.lat
-        longitude.value = e.latlng.lng
-        if (marker !== undefined) {
-          map.removeLayer(marker)
-        }
-        marker = L.marker(e.latlng)
-        marker.addTo(map)
-      }
-
-      map.on('click', onMapClick)
-    }
-  } else {
-    if (map !== undefined) {
-      map.remove()
-    }
-  }
-})
+const trackMapClick = (coords: [number, number]) => {
+  latitude.value = coords[0]
+  longitude.value = coords[1]
+}
 
 function searchSpecies(e: any) {
   filteredSpecies.value = species.value.filter((sp) => {
@@ -71,8 +47,10 @@ function searchSpecies(e: any) {
 }
 
 const loading = ref(false)
+const added = ref(false)
+const addedMessageDelay = 3000
 
-function createObservation() {
+const createObservation = () => {
   const payload = {
     species_id: selectedSpecies.value.id,
     date: date.value.toJSON(),
@@ -83,6 +61,12 @@ function createObservation() {
   try {
     loading.value = true
     axios.post('/api/observations/', payload)
+    added.value = true
+    show.value = false
+
+    setTimeout(() => {
+      added.value = false
+    }, addedMessageDelay + 500)
   } catch (error) {
     console.error(error)
   } finally {
@@ -102,41 +86,53 @@ function createObservation() {
       </button>
     </div>
 
-    <div v-if="show" class="grid-cols-2 md:grid-cols-2">
-      <div id="map-selector" class="h-64 w-96"></div>
-      <div id="form">
-        <form>
-          <div class="mb-5">
-            <label
-              for="species"
-              class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-              >Species</label
-            >
-            <AutoComplete
-              v-model="selectedSpecies"
-              :suggestions="filteredSpecies"
-              optionLabel="name"
-              @complete="searchSpecies"
-              class="w-full"
-            />
-          </div>
-          <div class="mb-5">
-            <label for="date" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-              >Date</label
-            >
-            <DatePicker id="datepicker-24h" v-model="date" showTime hourFormat="24" fluid />
-          </div>
+    <Message
+      severity="success"
+      icon="pi pi-check"
+      :life="addedMessageDelay"
+      v-if="added"
+      class="w-1/2 mx-auto my-8"
+      >Observation successfully added</Message
+    >
 
-          <div class="mb-5">
-            <label for="count" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-              >Count</label
-            >
-            <InputNumber v-model="count" inputId="integeronly" fluid />
-          </div>
+    <form @submit.prevent="createObservation">
+      <div v-if="show" class="flex flex-col items-center mt-8">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-10 w-1/2 mx-auto">
+          <AddMap class="h-64 w-96" @click="trackMapClick"></AddMap>
+          <div id="form">
+            <div class="mb-5">
+              <label
+                for="species"
+                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                >Species</label
+              >
+              <AutoComplete
+                v-model="selectedSpecies"
+                :suggestions="filteredSpecies"
+                optionLabel="name"
+                @complete="searchSpecies"
+                class="w-full"
+              />
+            </div>
+            <div class="mb-5">
+              <label for="date" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                >Date</label
+              >
+              <DatePicker id="datepicker-24h" v-model="date" showTime hourFormat="24" fluid />
+            </div>
 
-          <Button label="Submit" @click="createObservation" :loading="loading" />
-        </form>
+            <div class="mb-5">
+              <label
+                for="count"
+                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                >Count</label
+              >
+              <InputNumber v-model="count" inputId="integeronly" fluid />
+            </div>
+          </div>
+        </div>
+        <Button type="submit" label="Submit" :loading="loading" class="mx-auto" />
       </div>
-    </div>
+    </form>
   </div>
 </template>

@@ -47,7 +47,6 @@ def list_observations(request):
 
 @router.post("/")
 def add_observation(request, payload: ObservationIn):
-    import pdb; pdb.set_trace()
     observation = Observation()
     observation.count = payload.count
     observation.date = payload.date
