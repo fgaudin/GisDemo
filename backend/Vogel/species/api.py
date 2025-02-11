@@ -11,8 +11,12 @@ class SpeciesOut(ModelSchema):
 
     class Meta:
         model = Species
-        fields = ['id', 'name', 'plural', 'latin_name', 'category', 'rarity']
-                  
+        fields = ["id", "name", "plural", "latin_name", "category", "rarity"]
+
+    @staticmethod
+    def resolve_name(obj):
+        return obj.name.replace("|", "")
+
 
 @router.get("/", response=List[SpeciesOut])
 def list_species(request):

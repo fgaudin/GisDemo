@@ -5,5 +5,6 @@ export default interface IObservation {
   date: string
   latitude: string
   longitude: string
+  count: number
   species: ISpecies
 }

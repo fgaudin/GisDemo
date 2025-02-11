@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'species',
     'observation',
     'places',
+    'utils',
 ]
 
 MIDDLEWARE = [

@@ -20,7 +20,7 @@ const toggleExpanded = () => {
       <h2 class="text-xl font-bold">
         <a @click="toggleExpanded">{{ observation.species.name }}</a>
       </h2>
-      <p class="text-gray-500">{{ observation.date }}</p>
+      <p class="text-gray-500">{{ observation.date }} - x{{ observation.count }}</p>
       <MiniMap
         v-if="expanded"
         :id="observation.id"

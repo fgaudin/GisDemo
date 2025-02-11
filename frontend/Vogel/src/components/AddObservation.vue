@@ -97,7 +97,7 @@ const createObservation = () => {
 
     <form @submit.prevent="createObservation">
       <div v-if="show" class="flex flex-col items-center mt-8">
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-10 w-1/2 mx-auto">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-10 mx-auto">
           <AddMap class="h-64 w-96" @click="trackMapClick"></AddMap>
           <div id="form">
             <div class="mb-5">
@@ -112,13 +112,14 @@ const createObservation = () => {
                 optionLabel="name"
                 @complete="searchSpecies"
                 class="w-full"
+                fluid
               />
             </div>
             <div class="mb-5">
               <label for="date" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                 >Date</label
               >
-              <DatePicker id="datepicker-24h" v-model="date" showTime hourFormat="24" fluid />
+              <DatePicker v-model="date" fluid />
             </div>
 
             <div class="mb-5">
