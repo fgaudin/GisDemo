@@ -8,17 +8,23 @@ import AddObservation from '@/components/AddObservation.vue'
 
 const observations = ref([])
 
-onMounted(async () => {
+const loadAll = async () => {
   try {
     const response = await axios.get('/api/observations/')
     observations.value = await response.data
   } catch (error) {
     console.error(error)
   }
-})
+}
+
+onMounted(loadAll)
 
 const regionSelected = async (region: any) => {
   console.log(region)
+  if (region === null) {
+    loadAll()
+    return
+  }
   try {
     const response = await axios.post('/api/observations/filtered/', {
       region: region.geometry.coordinates[0],

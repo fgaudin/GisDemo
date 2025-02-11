@@ -42,9 +42,18 @@ onMounted(() => {
     }
   })
 
-  map.on('pm:create', (e) => {
+  const regionSelected = (e: any) => {
     selection.value = e.layer
     emit('regionSelected', e.layer.toGeoJSON())
+  }
+
+  map.on('pm:create', (e) => {
+    regionSelected(e)
+    e.layer.on('pm:edit', regionSelected)
+  })
+  map.on('pm:remove', () => {
+    selection.value = undefined
+    emit('regionSelected', null)
   })
 })
 
