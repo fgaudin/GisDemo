@@ -16,17 +16,30 @@ const toggleExpanded = () => {
 
 <template>
   <div>
-    <div class="dark:bg-gray-700 shadow-lg rounded-lg p-4">
-      <h2 class="text-xl font-bold">
-        <a @click="toggleExpanded">{{ observation.species.name }}</a>
-      </h2>
-      <p class="text-gray-500">{{ observation.date }} - x{{ observation.count }}</p>
-      <MiniMap
-        v-if="expanded"
-        :id="observation.id"
-        :latitude="observation.latitude"
-        :longitude="observation.longitude"
-      ></MiniMap>
+    <div class="shadow-lg rounded-lg bg-gray-100 p-4">
+      <div class="grid grid-cols-2">
+        <div>
+          <h2 class="text-xl font-bold">
+            <button @click="toggleExpanded">{{ observation.species.name }}</button>
+          </h2>
+        </div>
+        <div class="flex w-full justify-end text-gray-500">
+          {{ observation.date }} - x{{ observation.count }}
+        </div>
+      </div>
+      <div v-if="expanded">
+        <div v-if="observation.species.avatar_url" class="flex justify-center mt-8">
+          <img :src="observation.species.avatar_url" class="rounded-full w-30 h-30" />
+        </div>
+
+        <MiniMap
+          v-if="expanded"
+          :id="observation.id"
+          :latitude="observation.latitude"
+          :longitude="observation.longitude"
+          class="mt-8"
+        ></MiniMap>
+      </div>
     </div>
   </div>
 </template>

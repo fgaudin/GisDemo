@@ -11,7 +11,15 @@ class SpeciesOut(ModelSchema):
 
     class Meta:
         model = Species
-        fields = ["id", "name", "plural", "latin_name", "category", "rarity"]
+        fields = [
+            "id",
+            "name",
+            "plural",
+            "latin_name",
+            "category",
+            "rarity",
+            "avatar_url",
+        ]
 
     @staticmethod
     def resolve_name(obj):

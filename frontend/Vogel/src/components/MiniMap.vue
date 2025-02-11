@@ -23,6 +23,6 @@ onMounted(() => {
 
 <template>
   <section>
-    <div class="h-96" :id="'map-' + id"></div>
+    <div class="h-64" :id="'map-' + id"></div>
   </section>
 </template>

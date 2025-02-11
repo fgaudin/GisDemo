@@ -33,7 +33,7 @@ const regionSelected = async (region: any) => {
 <template>
   <main class="container mx-auto">
     <div
-      class="flex w-full bg-green-950 text-white h-24 mb-4 py-15 content-center px-center items-center justify-center rounded-b-lg"
+      class="flex w-full bg-green-800 text-white h-24 mb-4 py-15 content-center px-center items-center justify-center rounded-b-lg"
     >
       <div><img src="@/assets/logo.png" alt="Vogel" class="h-20 invert" /></div>
       <div class="font-bold text-center text-4xl">Vögel</div>

@@ -10,7 +10,7 @@ defineProps<{
 </script>
 
 <template>
-  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 bg-gray-300 p-4 rounded">
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 rounded">
     <ObservationCard
       v-for="observation in observations"
       :key="observation.id"

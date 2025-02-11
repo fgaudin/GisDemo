@@ -10,13 +10,14 @@ from .models import Observation
 
 router = Router()
 
+
 class ObservationIn(ModelSchema):
     latitude: decimal.Decimal
     longitude: decimal.Decimal
 
     class Meta:
         model = Observation
-        fields = ['count', 'date', 'species']
+        fields = ["count", "date", "species"]
 
 
 class ObservationOut(ModelSchema):
@@ -26,34 +27,40 @@ class ObservationOut(ModelSchema):
 
     class Meta:
         model = Observation
-        fields = ['id', 'count', 'date']
-                  
+        fields = ["id", "count", "date"]
+
     @staticmethod
     def resolve_latitude(obj):
         if not obj.location:
             return
         return obj.location.y
-    
+
     @staticmethod
     def resolve_longitude(obj):
         if not obj.location:
             return
         return obj.location.x
 
+
 class RegionFilterIn(Schema):
     region: List[List[decimal.Decimal]]
 
 
+LIMIT = 1000
+
+
 @router.get("/", response=List[ObservationOut])
 def list_observations(request):
-    qs = Observation.objects.all()
+    qs = Observation.objects.all().order_by("-date")[:LIMIT]
     return qs
+
 
 @router.post("/filtered/", response=List[ObservationOut])
 def filter_observations(request, payload: RegionFilterIn):
     poly = Polygon(payload.region)
-    qs = Observation.objects.filter(location__intersects=poly)
+    qs = Observation.objects.filter(location__intersects=poly).order_by("-date")[:LIMIT]
     return qs
+
 
 @router.post("/")
 def add_observation(request, payload: ObservationIn):
