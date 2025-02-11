@@ -16,6 +16,18 @@ onMounted(async () => {
     console.error(error)
   }
 })
+
+const regionSelected = async (region: any) => {
+  console.log(region)
+  try {
+    const response = await axios.post('/api/observations/filtered/', {
+      region: region.geometry.coordinates[0],
+    })
+    observations.value = await response.data
+  } catch (error) {
+    console.error(error)
+  }
+}
 </script>
 
 <template>
@@ -26,7 +38,7 @@ onMounted(async () => {
       <div><img src="@/assets/logo.png" alt="Vogel" class="h-20 invert" /></div>
       <div class="font-bold text-center text-4xl">Vögel</div>
     </div>
-    <Map :observations="observations"></Map>
+    <Map :observations="observations" @regionSelected="regionSelected"></Map>
     <AddObservation></AddObservation>
     <Observations :observations="observations"></Observations>
   </main>

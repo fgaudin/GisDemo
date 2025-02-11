@@ -13,6 +13,7 @@
     "format": "prettier --write src/"
   },
   "dependencies": {
+    "@geoman-io/leaflet-geoman-free": "^2.18.3",
     "@primevue/themes": "^4.2.5",
     "@tailwindcss/postcss": "^4.0.5",
     "@types/geojson": "^7946.0.16",

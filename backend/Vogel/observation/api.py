@@ -2,6 +2,7 @@ import decimal
 from typing import List
 from ninja import ModelSchema, Schema, Router
 from django.contrib.gis.geos import Point
+from django.contrib.gis.geos import Polygon
 
 from species.api import SpeciesOut
 
@@ -39,10 +40,19 @@ class ObservationOut(ModelSchema):
             return
         return obj.location.x
 
+class RegionFilterIn(Schema):
+    region: List[List[decimal.Decimal]]
+
 
 @router.get("/", response=List[ObservationOut])
 def list_observations(request):
     qs = Observation.objects.all()
+    return qs
+
+@router.post("/filtered/", response=List[ObservationOut])
+def filter_observations(request, payload: RegionFilterIn):
+    poly = Polygon(payload.region)
+    qs = Observation.objects.filter(location__intersects=poly)
     return qs
 
 @router.post("/")
