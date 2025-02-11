@@ -76,14 +76,9 @@ const createObservation = () => {
 </script>
 
 <template>
-  <div class="my-4">
+  <div class="my-4 bg-gray-100 rounded p-4">
     <div class="flex w-full items-center justify-center">
-      <button
-        @click="showForm"
-        class="bg-green-800 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
-      >
-        Add observation
-      </button>
+      <Button @click="showForm" class="font-bold py-2 px-4 rounded">Beobachtung melden</Button>
     </div>
 
     <Message
@@ -92,19 +87,19 @@ const createObservation = () => {
       :life="addedMessageDelay"
       v-if="added"
       class="w-1/2 mx-auto my-8"
-      >Observation successfully added</Message
+      >Beobachtung erfolgreich hinzugefügt</Message
     >
 
     <form @submit.prevent="createObservation">
       <div v-if="show" class="flex flex-col items-center mt-8">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-10 mx-auto">
-          <AddMap class="h-64 w-96" @click="trackMapClick"></AddMap>
+          <AddMap class="h-64 w-96 rounded shadow-lg" @click="trackMapClick"></AddMap>
           <div id="form">
             <div class="mb-5">
               <label
                 for="species"
                 class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                >Species</label
+                >Spezies</label
               >
               <AutoComplete
                 v-model="selectedSpecies"
@@ -117,7 +112,7 @@ const createObservation = () => {
             </div>
             <div class="mb-5">
               <label for="date" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                >Date</label
+                >Datum</label
               >
               <DatePicker v-model="date" fluid />
             </div>
@@ -126,13 +121,13 @@ const createObservation = () => {
               <label
                 for="count"
                 class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                >Count</label
+                >Zahl</label
               >
               <InputNumber v-model="count" inputId="integeronly" fluid />
             </div>
           </div>
         </div>
-        <Button type="submit" label="Submit" :loading="loading" class="mx-auto" />
+        <Button type="submit" label="Einreichen" :loading="loading" class="mx-auto" />
       </div>
     </form>
   </div>
