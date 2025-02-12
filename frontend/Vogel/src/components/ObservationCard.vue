@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { defineProps, ref } from 'vue'
+import { computed, defineProps, ref } from 'vue'
 import MiniMap from './MiniMap.vue'
 import type IObservation from '@/types/Observation'
 
@@ -12,6 +12,14 @@ const expanded = ref(false)
 const toggleExpanded = () => {
   expanded.value = !expanded.value
 }
+
+const computedName = computed(() => {
+  const name = props.observation.species.name
+  const maxLength = 27
+  return expanded.value || name.length < maxLength
+    ? name
+    : props.observation.species.name.substring(0, maxLength - 3).concat('...')
+})
 </script>
 
 <template>
@@ -20,7 +28,9 @@ const toggleExpanded = () => {
       <div class="flex">
         <div class="w-full">
           <h2 class="text-xl font-bold">
-            <button @click="toggleExpanded">{{ observation.species.name }}</button>
+            <button @click="toggleExpanded" class="text-left">
+              {{ computedName }}
+            </button>
           </h2>
         </div>
         <div class="text-gray-500 dark:text-gray-300 float-right text-right w-52">
