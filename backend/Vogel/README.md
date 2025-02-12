@@ -1,5 +1,7 @@
 SQL
 
+createuser --superuser vogel
+ALTER USER vogel CREATEDB;
 ALTER ROLE vogel SET client_encoding TO 'utf8';
 ALTER ROLE vogel SET default_transaction_isolation TO 'read committed';
 ALTER ROLE vogel SET timezone TO 'UTC';
