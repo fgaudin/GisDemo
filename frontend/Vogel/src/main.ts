@@ -5,6 +5,7 @@ import App from './App.vue'
 import router from './router'
 import PrimeVue from 'primevue/config';
 import Aura from '@primevue/themes/aura';
+import locale from 'primelocale/de.json';
 
 const app = createApp(App)
 
@@ -17,7 +18,8 @@ app.use(PrimeVue, {
                 order: 'tailwind-base, primevue, tailwind-utilities'
             }
         }
-    }
+    },
+    locale: locale.de
 });
 app.use(router)
 

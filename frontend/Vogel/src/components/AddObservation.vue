@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { onMounted, onUpdated, reactive, ref } from 'vue'
-import AutoComplete, { type AutoCompleteCompleteEvent } from 'primevue/autocomplete'
-import ColorPicker from 'primevue/colorpicker'
+import { onMounted, reactive, ref } from 'vue'
+import AutoComplete from 'primevue/autocomplete'
 import axios from 'axios'
-import type ISpecies from '@/types/Species'
 import { Button, DatePicker, InputNumber, Message } from 'primevue'
+import { Form } from '@primevue/forms'
+import Fieldset from 'primevue/fieldset'
 
 import AddMap from './AddMap.vue'
 
@@ -22,6 +22,14 @@ const date = ref(new Date())
 const count = ref(1)
 const latitude = ref(0)
 const longitude = ref(0)
+
+const clearForm = () => {
+  selectedSpecies.value = ''
+  date.value = new Date()
+  count.value = 1
+  latitude.value = 0
+  longitude.value = 0
+}
 
 onMounted(async () => {
   try {
@@ -41,36 +49,84 @@ const trackMapClick = (coords: [number, number]) => {
 }
 
 function searchSpecies(e: any) {
-  filteredSpecies.value = species.value.filter((sp) => {
+  filteredSpecies.value = species.value.filter((sp: any) => {
     return sp.name.toLowerCase().includes(e.query.toLowerCase())
   })
 }
 
 const loading = ref(false)
 const added = ref(false)
+const failed = ref(false)
 const addedMessageDelay = 3000
+const errors = reactive({
+  species: '',
+  date: '',
+  count: '',
+  location: '',
+})
 
-const createObservation = () => {
+const validateForm = () => {
+  let valid = true
+  if (!selectedSpecies.value) {
+    errors.species = 'Bitte wählen Sie eine Spezies aus'
+    valid = false
+  } else {
+    errors.species = ''
+  }
+  if (!date.value) {
+    errors.date = 'Bitte wählen Sie ein Datum aus'
+    valid = false
+  } else {
+    errors.date = ''
+  }
+  if (!count.value) {
+    errors.count = 'Bitte geben Sie eine Anzahl ein'
+    valid = false
+  } else {
+    errors.count = ''
+  }
+  if (!latitude.value || !longitude.value) {
+    errors.location = 'Bitte wählen Sie einen Ort auf der Karte aus'
+    valid = false
+  } else {
+    errors.location = ''
+  }
+  return valid
+}
+
+const createObservation = async () => {
+  if (!validateForm()) {
+    console.log(errors)
+    return
+  }
+
   const payload = {
     species_id: selectedSpecies.value.id,
-    date: date.value.toJSON(),
+    date: date.value.toISOString().split('T')[0],
     count: count.value,
     latitude: latitude.value,
     longitude: longitude.value,
   }
   try {
     loading.value = true
-    axios.post('/api/observations/', payload)
-    added.value = true
+    const response = await axios.post('/api/observations/', payload)
+    console.log(response.status)
+    if (response.status !== 201) {
+      failed.value = true
+    } else {
+      added.value = true
+      clearForm()
+    }
     show.value = false
-
-    setTimeout(() => {
-      added.value = false
-    }, addedMessageDelay + 500)
   } catch (error) {
-    console.error(error)
+    console.log('error')
+    failed.value = true
   } finally {
     loading.value = false
+    setTimeout(() => {
+      added.value = false
+      failed.value = false
+    }, addedMessageDelay + 500)
   }
 }
 </script>
@@ -83,17 +139,28 @@ const createObservation = () => {
 
     <Message
       severity="success"
-      icon="pi pi-check"
+      icon="pi pi-check-circle"
       :life="addedMessageDelay"
       v-if="added"
       class="w-1/2 mx-auto my-8"
       >Beobachtung erfolgreich hinzugefügt</Message
     >
+    <Message
+      severity="error"
+      icon="pi pi-times-circle"
+      :life="addedMessageDelay"
+      v-if="failed"
+      class="w-1/2 mx-auto my-8"
+      >Die Beobachtung konnte nicht gespeichert werden</Message
+    >
 
     <form @submit.prevent="createObservation">
       <div v-if="show" class="flex flex-col items-center mt-8">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-10 mx-auto">
-          <AddMap class="h-64 w-96 rounded shadow-lg" @click="trackMapClick"></AddMap>
+          <div>
+            <AddMap class="h-64 w-96 rounded shadow-lg" @click="trackMapClick"></AddMap>
+            <Message severity="error" v-if="errors.location">{{ errors.location }}</Message>
+          </div>
           <div id="form">
             <div class="mb-5">
               <label
@@ -107,23 +174,27 @@ const createObservation = () => {
                 optionLabel="name"
                 @complete="searchSpecies"
                 class="w-full"
+                :invalid="!!errors.species"
                 fluid
               />
+              <Message severity="error" v-if="errors.species">{{ errors.species }}</Message>
             </div>
             <div class="mb-5">
               <label for="date" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                 >Datum</label
               >
-              <DatePicker v-model="date" fluid />
+              <DatePicker v-model="date" dateFormat="dd/mm/yy" fluid :invalid="!!errors.date" />
+              <Message severity="error" v-if="errors.date">{{ errors.date }}</Message>
             </div>
 
             <div class="mb-5">
               <label
                 for="count"
                 class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                >Zahl</label
+                >Anzahl</label
               >
-              <InputNumber v-model="count" inputId="integeronly" fluid />
+              <InputNumber v-model="count" inputId="integeronly" fluid :invalid="!!errors.count" />
+              <Message severity="error" v-if="errors.count">{{ errors.count }}</Message>
             </div>
           </div>
         </div>

@@ -20,6 +20,13 @@ class ObservationIn(ModelSchema):
         fields = ["count", "date", "species"]
 
 
+class ObservationIdOut(ModelSchema):
+
+    class Meta:
+        model = Observation
+        fields = ["id"]
+
+
 class ObservationOut(ModelSchema):
     latitude: decimal.Decimal
     longitude: decimal.Decimal
@@ -62,7 +69,7 @@ def filter_observations(request, payload: RegionFilterIn):
     return qs
 
 
-@router.post("/")
+@router.post("/", response={201: ObservationIdOut})
 def add_observation(request, payload: ObservationIn):
     observation = Observation()
     observation.count = payload.count
@@ -71,4 +78,4 @@ def add_observation(request, payload: ObservationIn):
     observation.location = Point(float(payload.longitude), float(payload.latitude))
     observation.save()
 
-    return {"id": observation.id}
+    return 201, {"id": observation.id}
