@@ -20,6 +20,11 @@ const computedName = computed(() => {
     ? name
     : props.observation.species.name.substring(0, maxLength - 3).concat('...')
 })
+
+const computedDate = computed(() => {
+  const parts = props.observation.date.split('-')
+  return `${parts[2]}/${parts[1]}/${parts[0]}`
+})
 </script>
 
 <template>
@@ -34,7 +39,7 @@ const computedName = computed(() => {
           </h2>
         </div>
         <div class="text-gray-500 dark:text-gray-300 float-right text-right w-52">
-          {{ observation.date }} - x{{ observation.count }}
+          {{ computedDate }} - x{{ observation.count }}
         </div>
       </div>
       <div v-if="expanded">
