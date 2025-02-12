@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { onMounted, onUpdated, ref } from 'vue'
-import L from 'leaflet'
+import L, { latLng } from 'leaflet'
 import type IObservation from '@/types/Observation'
 import 'leaflet/dist/leaflet.css'
 import '@geoman-io/leaflet-geoman-free'
@@ -60,6 +60,29 @@ onMounted(() => {
   map.on('pm:remove', () => {
     selection.value = undefined
     emit('regionSelected', null)
+  })
+
+  map.on('moveend', function () {
+    if (selection.value !== undefined) {
+      return
+    }
+    const bounds = map.getBounds()
+    var poly = {
+      type: 'Feature',
+      geometry: {
+        type: 'Polygon',
+        coordinates: [
+          [
+            [bounds.getNorthWest().lng, bounds.getNorthWest().lat],
+            [bounds.getNorthEast().lng, bounds.getNorthEast().lat],
+            [bounds.getSouthEast().lng, bounds.getSouthEast().lat],
+            [bounds.getSouthWest().lng, bounds.getSouthWest().lat],
+            [bounds.getNorthWest().lng, bounds.getNorthWest().lat],
+          ],
+        ],
+      },
+    }
+    emit('regionSelected', poly)
   })
 })
 
