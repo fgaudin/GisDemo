@@ -16,14 +16,14 @@ const toggleExpanded = () => {
 
 <template>
   <div>
-    <div class="shadow-lg rounded-lg bg-gray-100 p-4">
-      <div class="grid grid-cols-2">
-        <div>
+    <div class="shadow-lg rounded-lg bg-gray-100 dark:bg-gray-800 p-4">
+      <div class="flex">
+        <div class="w-full">
           <h2 class="text-xl font-bold">
             <button @click="toggleExpanded">{{ observation.species.name }}</button>
           </h2>
         </div>
-        <div class="flex w-full justify-end text-gray-500">
+        <div class="text-gray-500 dark:text-gray-300 float-right text-right w-52">
           {{ observation.date }} - x{{ observation.count }}
         </div>
       </div>

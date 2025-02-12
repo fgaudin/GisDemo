@@ -3,8 +3,6 @@ import { onMounted, reactive, ref } from 'vue'
 import AutoComplete from 'primevue/autocomplete'
 import axios from 'axios'
 import { Button, DatePicker, InputNumber, Message } from 'primevue'
-import { Form } from '@primevue/forms'
-import Fieldset from 'primevue/fieldset'
 
 import AddMap from './AddMap.vue'
 
@@ -12,7 +10,6 @@ const show = ref(false)
 
 const showForm = () => {
   show.value = !show.value
-  console.log(show.value)
 }
 
 const species = ref<any>([])
@@ -96,7 +93,6 @@ const validateForm = () => {
 
 const createObservation = async () => {
   if (!validateForm()) {
-    console.log(errors)
     return
   }
 
@@ -110,7 +106,6 @@ const createObservation = async () => {
   try {
     loading.value = true
     const response = await axios.post('/api/observations/', payload)
-    console.log(response.status)
     if (response.status !== 201) {
       failed.value = true
     } else {
@@ -119,7 +114,6 @@ const createObservation = async () => {
     }
     show.value = false
   } catch (error) {
-    console.log('error')
     failed.value = true
   } finally {
     loading.value = false
@@ -132,7 +126,7 @@ const createObservation = async () => {
 </script>
 
 <template>
-  <div class="my-4 bg-gray-100 rounded p-4">
+  <div class="my-4 bg-gray-100 dark:bg-gray-800 rounded p-4">
     <div class="flex w-full items-center justify-center">
       <Button @click="showForm" class="font-bold py-2 px-4 rounded">Beobachtung melden</Button>
     </div>
