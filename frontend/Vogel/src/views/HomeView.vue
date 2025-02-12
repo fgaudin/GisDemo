@@ -7,7 +7,7 @@ import 'leaflet/dist/leaflet.css'
 import AddObservation from '@/components/AddObservation.vue'
 
 const observations = ref(<any>[])
-const limit = 200
+const limit = 100
 let offset = 0
 
 let currentUrl = '/api/observations/'
