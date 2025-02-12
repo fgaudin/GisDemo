@@ -2,38 +2,83 @@
 import Map from '@/components/Map.vue'
 import Observations from '@/components/Observations.vue'
 import axios from 'axios'
-import { onMounted, ref } from 'vue'
+import { onMounted, reactive, ref } from 'vue'
 import 'leaflet/dist/leaflet.css'
 import AddObservation from '@/components/AddObservation.vue'
 
-const observations = ref([])
+const observations = ref(<any>[])
+const limit = 200
+let offset = 0
 
-const loadAll = async () => {
+let currentUrl = '/api/observations/'
+let currentRegion: any = null
+const loadMoreActive = ref(true)
+
+const loadAll = async (more = false) => {
+  currentRegion = null
+  currentUrl = '/api/observations/'
+
+  if (!more) {
+    offset = 0
+    observations.value.length = 0
+  } else {
+    offset += limit
+  }
   try {
-    const response = await axios.get('/api/observations/')
-    observations.value = await response.data
+    const response = await axios.get(currentUrl + '?limit=' + limit + '&offset=' + offset)
+    const data = await response.data
+    if (data.count > offset + limit) {
+      loadMoreActive.value = true
+    } else {
+      loadMoreActive.value = false
+    }
+    const newData = observations.value.concat(data.items)
+    observations.value = newData
   } catch (error) {
     console.error(error)
+  }
+}
+
+const regionSelected = async (region: any, more = false) => {
+  currentUrl = '/api/observations/filtered/'
+  if (!more) {
+    offset = 0
+    observations.value.length = 0
+  } else {
+    offset += limit
+  }
+  if (region === null) {
+    loadAll()
+    return
+  } else {
+    currentRegion = region
+  }
+  try {
+    const response = await axios.post(currentUrl + '?limit=' + limit + '&offset=' + offset, {
+      region: region.geometry.coordinates[0],
+    })
+    const data = await response.data
+    if (data.count > offset + limit) {
+      loadMoreActive.value = true
+    } else {
+      loadMoreActive.value = false
+    }
+    const newData = observations.value.concat(data.items)
+    observations.value = newData
+  } catch (error) {
+    console.error(error)
+  }
+}
+
+const loadMore = () => {
+  if (currentRegion) {
+    regionSelected(currentRegion, true)
+  } else {
+    loadAll(true)
   }
 }
 
 onMounted(loadAll)
-
-const regionSelected = async (region: any) => {
-  console.log(region)
-  if (region === null) {
-    loadAll()
-    return
-  }
-  try {
-    const response = await axios.post('/api/observations/filtered/', {
-      region: region.geometry.coordinates[0],
-    })
-    observations.value = await response.data
-  } catch (error) {
-    console.error(error)
-  }
-}
 </script>
 
 <template>
@@ -46,6 +91,10 @@ const regionSelected = async (region: any) => {
     </div>
     <Map :observations="observations" @regionSelected="regionSelected"></Map>
     <AddObservation></AddObservation>
-    <Observations :observations="observations"></Observations>
+    <Observations
+      :observations="observations"
+      @loadMoreClick="loadMore"
+      :loadMoreActive="loadMoreActive"
+    ></Observations>
   </main>
 </template>

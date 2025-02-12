@@ -1,6 +1,7 @@
 import decimal
 from typing import List
-from ninja import ModelSchema, Schema, Router
+from ninja import ModelSchema, Schema
+from ninja.pagination import RouterPaginated
 from django.contrib.gis.geos import Point
 from django.contrib.gis.geos import Polygon
 
@@ -8,7 +9,7 @@ from species.api import SpeciesOut
 
 from .models import Observation
 
-router = Router()
+router = RouterPaginated()
 
 
 class ObservationIn(ModelSchema):
@@ -58,14 +59,16 @@ LIMIT = 1000
 
 @router.get("/", response=List[ObservationOut])
 def list_observations(request):
-    qs = Observation.objects.all().order_by("-date")[:LIMIT]
+    qs = Observation.objects.all().order_by("-date", "id")[:LIMIT]
     return qs
 
 
 @router.post("/filtered/", response=List[ObservationOut])
 def filter_observations(request, payload: RegionFilterIn):
     poly = Polygon(payload.region)
-    qs = Observation.objects.filter(location__intersects=poly).order_by("-date")[:LIMIT]
+    qs = Observation.objects.filter(location__intersects=poly).order_by("-date", "id")[
+        :LIMIT
+    ]
     return qs
 
 

@@ -16,12 +16,18 @@ const wiesbaden = [50.0782, 8.2398]
 let map: L.Map
 const selection = ref<any>()
 
+let layerGroup = L.layerGroup()
+
+// remove all the markers in one go
+
 onMounted(() => {
   map = L.map('map-main', { pmIgnore: false }).setView([wiesbaden[0], wiesbaden[1]], 6)
   const tiles = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
     maxZoom: 19,
     attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
   }).addTo(map)
+
+  layerGroup.addTo(map)
 
   map.pm.addControls({
     position: 'topright',
@@ -58,8 +64,9 @@ onMounted(() => {
 })
 
 onUpdated(() => {
+  layerGroup.clearLayers()
   for (let obs of props.observations) {
-    L.marker([parseFloat(obs.latitude), parseFloat(obs.longitude)]).addTo(map)
+    L.marker([parseFloat(obs.latitude), parseFloat(obs.longitude)]).addTo(layerGroup)
   }
 })
 </script>
