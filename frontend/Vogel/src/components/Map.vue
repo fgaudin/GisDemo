@@ -89,9 +89,14 @@ onMounted(() => {
 onUpdated(() => {
   layerGroup.clearLayers()
   for (let obs of props.observations) {
+    let img = ''
+    if (obs.species.avatar_url) {
+      img = `<img src="${obs.species.avatar_url}" class="rounded-full float-left w-12 h-12 mr-4"/>`
+    }
+
     L.marker([parseFloat(obs.latitude), parseFloat(obs.longitude)])
       .bindPopup(
-        `<div class="w-48 h-12"><img src="${obs.species.avatar_url}" class="rounded-full float-left w-12 h-12 mr-4"/><p><b>${obs.species.name}</b><br>${obs.date}<br>x${obs.count}</p></div>`,
+        `<div class="w-48 h-12">${img}<p><b>${obs.species.name}</b><br>${obs.date}<br>x${obs.count}</p></div>`,
       )
       .addTo(layerGroup)
   }
