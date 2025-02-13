@@ -16,6 +16,8 @@ class Command(BaseCommand):
 
         species = Species.objects.all()
         for sp in species:
+            if sp.avatar_url:
+                continue
             actual_url = f"{url}{sp.name.replace('|', '')}"
             print(actual_url)
             response = requests.get(actual_url)
