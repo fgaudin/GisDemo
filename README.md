@@ -1,10 +1,8 @@
 # Deployment process
 
-## Set host in invoke.yaml
+## Set up Invoke settings
 
-```
-host: user@hostname
-```
+Copy invoke.yaml.example to invoke.yaml and set variables
 
 ## Create and define deploy key on Github
 
@@ -21,5 +19,5 @@ Add key from ~/.ssh/id_ed25519.pub to https://github.com/fgaudin/GisDemo/setting
 ## Deploy
 
 ```
-inv deploy
+inv deploy <commit_sha>
 ```
