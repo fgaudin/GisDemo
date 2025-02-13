@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { onMounted, onUpdated, ref } from 'vue'
-import L, { latLng } from 'leaflet'
 import type IObservation from '@/types/Observation'
-import 'leaflet/dist/leaflet.css'
 import '@geoman-io/leaflet-geoman-free'
 import '@geoman-io/leaflet-geoman-free/dist/leaflet-geoman.css'
+import L from 'leaflet'
+import 'leaflet/dist/leaflet.css'
+import { onMounted, onUpdated, ref } from 'vue'
 
 const props = defineProps<{
   observations: IObservation[]

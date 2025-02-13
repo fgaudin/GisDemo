@@ -1,9 +1,7 @@
 <script setup lang="ts">
 import type IObservation from '@/types/Observation'
-import ObservationCard from './ObservationCard.vue'
 import { Button } from 'primevue'
-
-import { ref } from 'vue'
+import ObservationCard from './ObservationCard.vue'
 
 defineProps<{
   observations: IObservation[]

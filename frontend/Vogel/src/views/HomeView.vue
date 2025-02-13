@@ -1,10 +1,10 @@
 <script setup lang="ts">
+import AddObservation from '@/components/AddObservation.vue'
 import Map from '@/components/Map.vue'
 import Observations from '@/components/Observations.vue'
 import axios from 'axios'
-import { onMounted, reactive, ref } from 'vue'
 import 'leaflet/dist/leaflet.css'
-import AddObservation from '@/components/AddObservation.vue'
+import { onMounted, ref } from 'vue'
 
 const observations = ref(<any>[])
 const limit = 100

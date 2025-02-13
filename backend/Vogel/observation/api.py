@@ -9,6 +9,8 @@ from species.api import SpeciesOut
 
 from .models import Observation
 
+LIMIT = 200
+
 router = RouterPaginated()
 
 
@@ -52,9 +54,6 @@ class ObservationOut(ModelSchema):
 
 class RegionFilterIn(Schema):
     region: List[List[decimal.Decimal]]
-
-
-LIMIT = 1000
 
 
 @router.get("/", response=List[ObservationOut])

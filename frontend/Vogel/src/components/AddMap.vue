@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, onUpdated, ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import L from 'leaflet'
 
 let map: L.Map

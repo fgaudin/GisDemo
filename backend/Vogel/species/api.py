@@ -28,5 +28,5 @@ class SpeciesOut(ModelSchema):
 
 @router.get("/", response=List[SpeciesOut])
 def list_species(request):
-    qs = Species.objects.all()
+    qs = Species.objects.all().order_by("name", "id")
     return qs
