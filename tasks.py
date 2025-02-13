@@ -116,6 +116,7 @@ def install_backend(c):
     cnx.put("./backend/Vogel/.env", f"{BASE_DIR}/releases/{c.sha}/backend/Vogel/.env")
 
     with cnx.cd(f"{BASE_DIR}/releases/{c.sha}/backend/Vogel"):
+        cnx.run(rf"""sed -i~ '/^DEBUG=/s/=.*/=False/' .env""")
         cnx.run(rf"""sed -i~ '/^SECRET_KEY=/s/=.*/={c.secret_key}/' .env""")
         cnx.run(rf"""sed -i~ '/^ALLOWED_HOSTS=/s/=.*/={c.domain}/' .env""")
         cnx.run(
