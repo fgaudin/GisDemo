@@ -26,7 +26,7 @@ def install_dependencies(c):
 
     cnx.run("sudo apt update")
     cnx.run(
-        "sudo apt install -y python3-virtualenv postgis postgresql-server-dev-16 nginx"
+        "sudo apt install -y python3-virtualenv postgis postgresql-server-dev-16 nginx install binutils libproj-dev gdal-bin"
     )
 
 
