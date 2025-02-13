@@ -1,7 +1,7 @@
 <script setup lang="ts">
+import type IObservation from '@/types/Observation'
 import { computed, defineProps, ref } from 'vue'
 import MiniMap from './MiniMap.vue'
-import type IObservation from '@/types/Observation'
 
 const props = defineProps<{
   observation: IObservation

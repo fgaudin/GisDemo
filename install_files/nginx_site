@@ -1,0 +1,20 @@
+server {
+    listen 80;
+    server_name vogel.francoisgaudin.com;
+
+    location / {
+        root   "/var/www/current/frontend/Vogel/dist/";
+        index  index.html;
+        try_files $uri $uri/ /index.html;
+    }
+
+    location /api {
+        include proxy_params;
+        proxy_pass http://unix:/run/gunicorn.sock;
+    }
+
+    location /admin {
+        include proxy_params;
+        proxy_pass http://unix:/run/gunicorn.sock;
+    }
+}

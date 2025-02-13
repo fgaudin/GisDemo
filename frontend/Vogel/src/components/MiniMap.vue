@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { onMounted } from 'vue'
 import L from 'leaflet'
+import { onMounted } from 'vue'
 
 const props = defineProps<{
   id: number
