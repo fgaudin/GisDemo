@@ -9,8 +9,6 @@ Group=www-data
 WorkingDirectory=/var/www/current/backend/Vogel
 ExecStart=/var/www/current/backend/Vogel/.venv/bin/gunicorn \
           --access-logfile - \
-          --error-logfile /var/log/gunicorn_error.log \
-          --capture-output
           --workers 3 \
           --bind unix:/run/gunicorn.sock \
           Vogel.wsgi:application
