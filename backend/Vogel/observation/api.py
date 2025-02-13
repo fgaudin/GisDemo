@@ -9,8 +9,6 @@ from species.api import SpeciesOut
 
 from .models import Observation
 
-LIMIT = 200
-
 router = RouterPaginated()
 
 
@@ -58,16 +56,14 @@ class RegionFilterIn(Schema):
 
 @router.get("/", response=List[ObservationOut])
 def list_observations(request):
-    qs = Observation.objects.all().order_by("-date", "id")[:LIMIT]
+    qs = Observation.objects.all().order_by("-date", "id")
     return qs
 
 
 @router.post("/filtered/", response=List[ObservationOut])
 def filter_observations(request, payload: RegionFilterIn):
     poly = Polygon(payload.region)
-    qs = Observation.objects.filter(location__intersects=poly).order_by("-date", "id")[
-        :LIMIT
-    ]
+    qs = Observation.objects.filter(location__intersects=poly).order_by("-date", "id")
     return qs
 
 

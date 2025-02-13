@@ -152,7 +152,7 @@ const createObservation = async () => {
       <div v-if="show" class="flex flex-col items-center mt-8">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-10 mx-auto">
           <div>
-            <AddMap class="h-64 w-96 rounded shadow-lg" @click="trackMapClick"></AddMap>
+            <AddMap class="h-64 w-full md:w-96 rounded shadow-lg" @click="trackMapClick"></AddMap>
             <Message severity="error" v-if="errors.location">{{ errors.location }}</Message>
           </div>
           <div id="form">
