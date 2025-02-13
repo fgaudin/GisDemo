@@ -2,8 +2,8 @@
 import type IObservation from '@/types/Observation'
 import '@geoman-io/leaflet-geoman-free'
 import '@geoman-io/leaflet-geoman-free/dist/leaflet-geoman.css'
-import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
+import L from 'leaflet'
 import { onMounted, onUpdated, ref } from 'vue'
 
 const props = defineProps<{

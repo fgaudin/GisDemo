@@ -17,4 +17,8 @@ server {
         include proxy_params;
         proxy_pass http://unix:/run/gunicorn.sock;
     }
+
+    location /static/ {
+        root /var/www/current/backend/Vogel;
+    }
 }

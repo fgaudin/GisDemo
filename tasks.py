@@ -174,6 +174,7 @@ def install_nginx(c):
 def activate(c):
     print_task("Activating new release...")
     cnx = Connection(c.host)
+    cnx.sudo(f"rm -f {BASE_DIR}/current")
     cnx.sudo(f"ln -s {BASE_DIR}/releases/{c.sha} {BASE_DIR}/current")
     cnx.sudo("systemctl restart nginx")
 
